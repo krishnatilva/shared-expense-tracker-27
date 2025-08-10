@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Per Person Summary</title>
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        margin: 0;
+        background: transparent;
+        color: #fff;
+        /* padding: 20px; */
+        position: relative;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+            max-width: 90%;
+    margin: 0 auto;
+      }
+      h2 {
+    text-align: center;
+}
+      th, td {
+        padding: 12px;
+        border: 1px solid #444;
+        text-align: left;
+      }
+      th {
+        background: linear-gradient(90deg, #f09400, #fc5b00);
+        color: white;
+      }
+     
+
+.area {
+    background: #1a1a1a;
+    background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    /* position: relative; */
+    /* padding: 20px; */
+    width: 100%;
+    max-width: 100%;
+}
+
+.circles{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    padding: 0;
+}
+
+.circles li{
+    position: absolute;
+    display: block;
+    list-style: none;
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    animation: animate 25s linear infinite;
+    bottom: -150px;
+    
+}
+
+.circles li:nth-child(1){
+    left: 25%;
+    width: 80px;
+    height: 80px;
+    animation-delay: 0s;
+}
+
+
+.circles li:nth-child(2){
+    left: 10%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 2s;
+    animation-duration: 12s;
+}
+
+.circles li:nth-child(3){
+    left: 70%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 4s;
+}
+
+.circles li:nth-child(4){
+    left: 40%;
+    width: 60px;
+    height: 60px;
+    animation-delay: 0s;
+    animation-duration: 18s;
+}
+
+.circles li:nth-child(5){
+    left: 65%;
+    width: 20px;
+    height: 20px;
+    animation-delay: 0s;
+}
+
+.circles li:nth-child(6){
+    left: 75%;
+    width: 110px;
+    height: 110px;
+    animation-delay: 3s;
+}
+
+.circles li:nth-child(7){
+    left: 35%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 7s;
+}
+
+.circles li:nth-child(8){
+    left: 50%;
+    width: 25px;
+    height: 25px;
+    animation-delay: 15s;
+    animation-duration: 45s;
+}
+
+.circles li:nth-child(9){
+    left: 20%;
+    width: 15px;
+    height: 15px;
+    animation-delay: 2s;
+    animation-duration: 35s;
+}
+
+.circles li:nth-child(10){
+    left: 85%;
+    width: 150px;
+    height: 150px;
+    animation-delay: 0s;
+    animation-duration: 11s;
+}
+
+
+
+@keyframes animate {
+
+    0%{
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+        border-radius: 0;
+    }
+
+    100%{
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+        border-radius: 50%;
+    }
+
+}
+  </style>
+</head>
+<body>
+   
+
+
+<div class="area" >
+  <h2>Per Person Contribution Summary</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Friend</th>
+        <th>Total Contributed (₹)</th>
+      </tr>
+    </thead>
+    <tbody id="summaryTable"></tbody>
+  </table>
+            <ul class="circles">
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+            </ul>
+    </div >
+
+
+
+  
+
+  
+
+
+  <script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  const supabaseUrl = 'https://lcvdimgrajtskmbhwnxh.supabase.co';
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjdmRpbWdyYWp0c2ttYmh3bnhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5OTQ4MTEsImV4cCI6MjA2OTU3MDgxMX0.JlNHo01Xjn8HehF3fWojrNUhkzssqq6K8gn1D8nZQLU';
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  const { data: entries, error } = await supabase
+    .from("expenses")
+    .select("*");
+
+  if (error) {
+    console.error("Error fetching summary data:", error);
+  }
+
+  const summary = {};
+
+  entries.forEach(entry => {
+    const names = entry.friends || [];
+    const perPerson = entry.amount / names.length;
+
+    names.forEach(name => {
+      summary[name] = (summary[name] || 0) + perPerson;
+    });
+  });
+
+  const table = document.getElementById("summaryTable");
+  Object.entries(summary).forEach(([name, amount]) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${name}</td><td>₹${amount.toFixed(2)}</td>`;
+    table.appendChild(row);
+  });
+</script>
+
+
+
+  <script>
+    const entries = JSON.parse(localStorage.getItem("entries") || "[]");
+    const summary = {};
+    entries.forEach(entry => {
+      entry.names.forEach(name => {
+        summary[name] = (summary[name] || 0) + entry.perPerson;
+      });
+    });
+    const table = document.getElementById("summaryTable");
+    Object.entries(summary).forEach(([name, amount]) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${name}</td><td>₹${amount.toFixed(2)}</td>`;
+      table.appendChild(row);
+    });
+  </script>
+
+
+<script>
+  if (sessionStorage.getItem("loggedIn") !== "true") {
+    window.location.href = 'index.html'; // redirect to login page
+  }
+</script>
+
+</body>
+</html>

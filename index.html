@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Shared Expenses</title>
+  
+  <link rel="stylesheet" href="assets/css/global.css">
+  <style>
+    body {
+      margin: 0;
+      background: #121212;
+      color: #fff;
+      font-family: var(--font-main);
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      height: 100vh;
+      padding: 20px;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 380px;
+      
+      border-radius: 28px;
+      padding: 32px 24px;
+      padding-top: 0;
+    }
+    .login-container h2 {
+      margin-bottom: 4px;
+      font-size: 35px;
+      font-weight: 600;
+    }
+    .login-container p {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 24px;
+    }
+   .social-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 24px;
+    margin-top: 10px;
+    gap: 20px;
+}
+    .social-row button {
+      background: #2a2a2a;
+      border: none;
+      border-radius: 50%;
+      padding: 12px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .social-row img {
+      width: 22px;
+    }
+   .input-group {
+    display: flex;
+    align-items: center;
+    /* background: #2a2a2a; */
+    /* padding: 12px; */
+    border-radius: 16px;
+    /* margin-bottom: 14px; */
+}
+.remember-toggle input[type="checkbox"] {
+    width: 10%;
+}
+    .input-group input {
+      border: none;
+      background: white;
+      color: black;
+      width: 100%;
+      font-size: 15px;
+    }
+    .input-group input:focus {
+      outline: none;
+    }
+    .remember-toggle {
+      font-size: 13px;
+      color: #ccc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+     
+    }
+    .login-button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(90deg, #f09400, #fc5b00);
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+    .footer-text {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+    }
+    .footer-text a {
+      color: #fc5b00;
+      text-decoration: none;
+      font-weight: 500;
+    }
+     .background-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('./assets/image/2148325478.jpg');
+      background-size: cover;
+      background-position: left;
+      z-index: -1;
+      
+    }
+   .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgb(0 0 0), #00000026);
+    z-index: -1;
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+}
+  </style>
+</head>
+<body>
+  <div class="background-image"></div>
+    <div class="overlay"></div>
+  <div class="login-container glow">
+    <h2>Login</h2>
+    <p>Login with one of the following options.</p>
+
+   
+
+    <div class="input-group">
+      <input type="text" id="username" placeholder="Username">
+    </div>
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Password">
+    </div>
+
+    <div class="remember-toggle">
+      <span>Remind me next time</span>
+      <input type="checkbox">
+    </div>
+
+    <button class="login-button" onclick="login()">Login</button>
+
+    <div class="footer-text">
+      Don’t have account? <a href="#">Sign up</a>
+    </div>
+     <div class="social-row">
+      <button><img src="./assets/image/search (1).png" alt="Google"></button>
+      <button><img src="./assets/image/apple.png" alt="Apple"></button>
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      if (user === 'admin' && pass === 'T3@mb@sket@2025') {
+        window.location.href = 'dashboard.html';
+      } else {
+        alert('Invalid login credentials.');
+      }
+    }
+  </script>
+
+
+<script>
+  function login() {
+    const user = document.getElementById('username').value.trim();
+    const pass = document.getElementById('password').value.trim();
+
+    if (user === 'admin' && pass === 'T3@mb@sket@2025') {
+      sessionStorage.setItem("loggedIn", "true");
+ // store login status
+      window.location.href = 'dashboard.html';
+    } else {
+      alert('Invalid login credentials.');
+    }
+  }
+</script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Shared Expenses</title>
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <style>
+    body {
+      background: #121212;
+      color: #fff;
+      font-family: var(--font-main);
+      padding: 20px;
+      min-height: 100vh;
+
+    }
+    h2 {
+      text-align: center;
+      color: #fc5b00;
+      margin-bottom: 20px;
+    }
+    .dashboard {
+      max-width: 480px;
+      margin: auto;
+    }
+    .input-block, .entry {
+      background: #1e1e1e;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      background: #2a2a2a;
+      border: none;
+      padding: 12px;
+      color: #fff;
+      border-radius: 12px;
+      font-size: 15px;
+      margin-top: 8px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: #ccc;
+      margin-bottom: 4px;
+    }
+    .friend-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .friend-item {
+      background: #2a2a2a;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .friend-item.active {
+      border-color: #fc5b00;
+      background: #333;
+    }
+    .friend-item input {
+      display: none;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #f09400, #fc5b00);
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      opacity: 0.95;
+    }
+     .entry {
+      line-height: 1.6;
+      font-size: 14px;
+      background: #1e1e1e;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    div#entriesContainer {
+    position: relative;
+    margin-top: 40px;
+}
+    div#entriesContainer::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(to top, rgba(18,18,18,1), rgba(18,18,18,0));
+      pointer-events: none;
+    }
+    .entry strong {
+      color: #fb6100;
+    }
+    #entriesContainer.limited .entry:nth-child(n+3) {
+      display: none;
+    }
+    #viewAllBtn {
+      display: block;
+      margin: 0 auto;
+      margin-top: -10px;
+      margin-bottom: 20px;
+      width: auto;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #f09400, #fc5b00);
+      border-radius: 12px;
+      font-size: 14px;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    /* Logout button */
+.logout-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;           /* clickable area slightly bigger than icon for UX */
+  height: 44px;
+  padding: 6px;
+  border-radius: 10px;   /* pill-like small radius */
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: #ffffff;        /* icon color */
+  cursor: pointer;
+  transition: all .15s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+}
+
+/* Hover / focus */
+.logout-btn:hover,
+.logout-btn:focus{
+  transform: translateY(-2px);
+  background: linear-gradient(90deg, #f09400, #fc5b00);
+  color: #fff;           /* ensures SVG using currentColor turns white */
+  outline: none;
+}
+
+/* Small icon sizing: the SVG uses 32x32 while the button area is 44x44 for comfortable touch */
+.logout-btn svg {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <button class="logout-btn" onclick="logout()" aria-label="Logout" title="Logout">
+  <!-- 32x32 logout icon (inline SVG) -->
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M16 17L21 12L16 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M21 12H9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M12 19H7C5.89543 19 5 18.1046 5 17V7C5 5.89543 5.89543 5 7 5H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+    <h2>Shared Expenses Dashboard</h2>
+
+    <div class="input-block">
+      <label for="entryDate">Date</label>
+      <input type="text" id="entryDate" readonly>
+
+      <label for="entryTitle">Investment Title</label>
+      <input type="text" id="entryTitle" placeholder="Enter title">
+
+      <label for="entryPrice">Total Amount</label>
+      <input type="number" id="entryPrice" placeholder="Enter amount">
+
+      <label>Select Friends:</label>
+      <div id="friendCheckboxes" class="friend-list"></div>
+
+      <button id="addEntryBtn">Add Entry</button>
+      <button onclick="window.location.href='summary.html'">View Summary</button>
+    </div>
+
+    <div id="entriesContainer" class="limited"></div>
+    <button id="viewAllBtn" onclick="window.location.href='all-entries.html'">View All Entries</button>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabaseUrl = 'https://lcvdimgrajtskmbhwnxh.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjdmRpbWdyYWp0c2ttYmh3bnhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5OTQ4MTEsImV4cCI6MjA2OTU3MDgxMX0.JlNHo01Xjn8HehF3fWojrNUhkzssqq6K8gn1D8nZQLU';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const friends = ["Krishna", "Dushyant", "Dhruv", "Darsh", "Kasyap", "Kush", "Om", "Zeel"];
+
+    async function init() {
+      document.getElementById("entryDate").value = new Date().toLocaleString();
+      const boxDiv = document.getElementById("friendCheckboxes");
+      friends.forEach(name => {
+        const label = document.createElement("label");
+        label.className = "friend-item";
+        label.innerHTML = `<input type='checkbox' value='${name}'> ${name}`;
+        label.addEventListener('click', function () {
+          const input = label.querySelector('input');
+          input.checked = !input.checked;
+          label.classList.toggle('active', input.checked);
+        });
+        boxDiv.appendChild(label);
+      });
+      await renderEntries();
+    }
+
+    document.getElementById("addEntryBtn").onclick = async function () {
+      const title = document.getElementById("entryTitle").value.trim();
+      const amount = parseFloat(document.getElementById("entryPrice").value);
+      const date = new Date().toISOString();
+      const selectedFriends = [...document.querySelectorAll("#friendCheckboxes input:checked")].map(cb => cb.value);
+
+      if (!title || !amount || selectedFriends.length === 0) {
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const { error } = await supabase.from("expenses").insert([
+        {
+          title,
+          amount,
+          date,
+          friends: selectedFriends,
+          shared_by: "admin"
+        }
+      ]);
+
+      if (error) {
+        alert("Insert error: " + error.message);
+        return;
+      }
+
+      //alert("Added successfully!");
+      clearForm();
+      await renderEntries();
+    };
+
+    function clearForm() {
+      document.getElementById("entryTitle").value = "";
+      document.getElementById("entryPrice").value = "";
+      document.getElementById("entryDate").value = new Date().toLocaleString();
+      document.querySelectorAll("#friendCheckboxes input").forEach(cb => {
+        cb.checked = false;
+        cb.parentElement.classList.remove("active");
+      });
+    }
+
+    async function renderEntries() {
+      const container = document.getElementById("entriesContainer");
+      container.innerHTML = "Loading entries...";
+
+      const { data: entries, error } = await supabase
+        .from("expenses")
+        .select("*")
+        .order("date", { ascending: false });
+
+      if (error) {
+        container.innerHTML = "Error loading entries.";
+        console.error(error);
+        return;
+      }
+
+      container.innerHTML = "";
+
+      if (entries.length === 0) {
+        container.innerHTML = "<p>No entries found.</p>";
+        return;
+      }
+
+      entries.forEach(entry => {
+        const div = document.createElement("div");
+        const perPerson = (entry.amount / entry.friends.length).toFixed(2);
+        div.className = "entry";
+        div.innerHTML = `
+          <strong>${entry.title}</strong><br>
+          <small>${new Date(entry.date).toLocaleString()}</small><br>
+          Total: ₹${entry.amount}<br>
+          Friends: ${entry.friends.join(", ")}<br>
+          <span style="color:#4caf50;"><strong>Per Person:</strong> ₹${perPerson}</span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    init();
+  </script>
+<script>
+  if (sessionStorage.getItem("loggedIn") !== "true") {
+    window.location.href = 'index.html'; // redirect to login page
+  }
+</script>
+
+<script>
+  function logout() {
+    localStorage.removeItem("loggedIn");
+    window.location.href = "welcome.html";
+  }
+</script>
+<script>
+function logout() {
+  // Remove both sessionStorage and localStorage keys to be safe
+  sessionStorage.removeItem("loggedIn");
+  localStorage.removeItem("loggedIn");
+  // Optional: clear everything (uncomment if you want)
+  // sessionStorage.clear();
+  // localStorage.clear();
+
+  // Redirect to welcome or login
+  window.location.href = "welcome.html";
+}
+</script>
+</body>
+</html>

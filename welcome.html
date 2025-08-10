@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome | Shared Expenses</title>
+  <link rel="stylesheet" href="assets/css/global.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-main);
+    }
+    .welcome-screen {
+     
+      height: 100vh;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      position: relative;
+    }
+    .background-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('./assets/image/digital-art-portrait-person-listening-music-headphones.jpg');
+      background-size: cover;
+      background-position: left;
+      z-index: -1;
+      
+    }
+   .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgb(0 0 0), #00000026);
+    z-index: -1;
+    border-bottom-left-radius: 32px;
+    border-bottom-right-radius: 32px;
+}
+    .content {
+      text-align: center;
+      color: #fff;
+      padding: 24px;
+      width: 100%;
+    }
+    .content h1 {
+      font-size: 42px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    .content h1 span {
+      color: #fc5b00;
+    }
+    .content p {
+      font-size: 13px;
+      color: #ddd;
+      margin-bottom: 24px;
+    }
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+    .btn-group button {
+      flex: 1;
+      padding: 14px;
+      font-weight: bold;
+      font-size: 15px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-login {
+      background: white;
+      color: #000;
+    }
+    .btn-signup {
+      background: linear-gradient(90deg, #f09400, #fc5b00);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-screen">
+    <div class="background-image"></div>
+    <div class="overlay"></div>
+    <div class="content">
+      <h1>Welcome to <span>Shared Expenses</span></h1>
+      <p>The smart way to split and track shared group expenses across friends, family, or roommates!</p>
+      <div class="btn-group">
+        <button class="btn-login" onclick="location.href='index.html'">Login</button>
+        <button class="btn-signup">Signup</button>
+      </div>
+    </div>
+  </div>
+</body>
+
+
+<script>
+  document.querySelector('.btn-login').addEventListener('click', function () {
+    if (localStorage.getItem("loggedIn") === "true") {
+      window.location.href = 'dashboard.html';
+    } else {
+      window.location.href = 'index.html';
+    }
+  });
+</script>
+
+</html>
